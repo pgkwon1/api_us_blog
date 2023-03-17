@@ -7,6 +7,7 @@ interface UserAttribute {
   id: string;
   userId: string;
   password: string;
+  nickname: string;
   salt: string;
 }
 class Users extends Model<UserAttribute> {
@@ -15,6 +16,8 @@ class Users extends Model<UserAttribute> {
   public userId: string;
 
   public password: string;
+
+  public nickname: string;
 
   public salt: string;
 
