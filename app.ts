@@ -1,11 +1,25 @@
+import "express-async-errors";
 import express from "express";
-import { sequelize } from "./models";
-import indexRouter from "./routes/index";
-import Users from "./models/Users.model";
-import Likes from "./models/Likes.model";
-import Posts from "./models/Posts.model";
-import Tags from "./models/Tags.model";
+import bodyParser from "body-parser";
+import morgan from "morgan";
 
+import indexRouter from "./routes/index";
+import memberRouter from "./routes/member";
 const app = express();
-app.listen(3001, async () => {});
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("combined"));
+} else {
+  app.use(morgan("combined"));
+}
+app.use(bodyParser.json());
 app.use("/", indexRouter);
+app.use("/member", memberRouter);
+app.use(function (error, req, res, next) {
+  console.log("error!!");
+});
+app.listen(3001, async () => {});
