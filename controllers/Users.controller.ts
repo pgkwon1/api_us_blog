@@ -2,12 +2,7 @@ import RegisterDto from "../dto/member/RegisterDto";
 import UsersService from "../services/Users.service";
 import UtilService from "../services/Util.service";
 
-interface IUserDomain {
-  //getUser(): Promise<object>;
-  //login(): Promise<object>;
-  register(registerData: RegisterDto): Promise<void>;
-}
-class UserController implements IUserDomain {
+class UserController implements IUsersControllerDomain {
   public userService: UsersService;
 
   constructor() {

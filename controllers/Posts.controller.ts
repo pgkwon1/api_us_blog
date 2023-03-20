@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import Posts from "../models/Posts.model";
 import PostsService from "../services/Posts.service";
+import { IPostsControllerDomain } from "../domain/controllers/Posts";
 
-interface IPostDomain {
-  getUserPostList(req: Request, res: Response): Promise<object>;
-}
-class PostController implements IPostDomain {
+class PostController implements IPostsControllerDomain {
   public author: string;
 
   constructor(data?) {

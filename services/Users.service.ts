@@ -1,7 +1,8 @@
+import { IUserServiceDomain } from "../domain/services/Users";
 import RegisterDto from "../dto/member/RegisterDto";
 import Users from "../models/Users.model";
 
-class UsersService {
+class UsersService implements IUserServiceDomain {
   constructor() {}
 
   async register(registerData: RegisterDto): Promise<boolean> {

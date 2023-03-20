@@ -1,7 +1,8 @@
+import { IPostsServiceDomain } from "../domain/services/Posts";
 import Likes from "../models/Likes.model";
 import Posts from "../models/Posts.model";
 
-class PostsService {
+class PostsService implements IPostsServiceDomain {
   public author: string;
 
   constructor(data?) {
