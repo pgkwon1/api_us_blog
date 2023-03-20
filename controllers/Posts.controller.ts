@@ -1,5 +1,3 @@
-import { Request, Response } from "express";
-import Posts from "../models/Posts.model";
 import PostsService from "../services/Posts.service";
 import { IPostsControllerDomain } from "../domain/controllers/Posts";
 
