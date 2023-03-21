@@ -22,7 +22,4 @@ app.use("/", indexRouter);
 app.use("/member", memberRouter);
 app.use("/post", postsRouter);
 
-app.use(function (error, req, res, next) {
-  console.log("error!!");
-});
 app.listen(3001, async () => {});

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import UserController from "../controllers/User.controller";
+import UserController from "../controllers/Users.controller";
 import UserMiddleWare from "../middleware/Users.middleware";
 const router = express.Router();
 
@@ -11,7 +11,6 @@ router.post("/register", async (req: Request, res: Response) => {
 
     await User.register(req.body);
   } catch (err) {
-    console.log(err);
     if (err instanceof ReferenceError) {
       err.message = "회원가입에 실패하였습니다 관리자에게 문의해주세요";
     }
