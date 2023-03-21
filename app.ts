@@ -5,6 +5,7 @@ import morgan from "morgan";
 
 import indexRouter from "./routes/index";
 import memberRouter from "./routes/member";
+import postsRouter from "./routes/posts";
 const app = express();
 app.use(
   bodyParser.urlencoded({
@@ -19,6 +20,8 @@ if (process.env.NODE_ENV === "production") {
 app.use(bodyParser.json());
 app.use("/", indexRouter);
 app.use("/member", memberRouter);
+app.use("/post", postsRouter);
+
 app.use(function (error, req, res, next) {
   console.log("error!!");
 });
