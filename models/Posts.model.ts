@@ -74,6 +74,12 @@ Posts.init(
     timestamps: true,
   }
 );
+
+const PostsTags = sequelize.define("PostsTags", {
+  tagId: DataTypes.STRING,
+  postId: DataTypes.STRING,
+});
+
 Posts.hasMany(Likes, {
   as: "postsLikes",
   foreignKey: "postId",
@@ -81,6 +87,11 @@ Posts.hasMany(Likes, {
 });
 Posts.belongsToMany(Tags, {
   as: "postsTags",
-  through: "PostsTags",
+  through: PostsTags,
+});
+Tags.belongsToMany(Posts, {
+  as: "postsTags",
+
+  through: PostsTags,
 });
 export default Posts;
