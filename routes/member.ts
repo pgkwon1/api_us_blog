@@ -14,7 +14,7 @@ router.post("/register", async (req: Request, res: Response) => {
     if (err instanceof ReferenceError) {
       err.message = "회원가입에 실패하였습니다 관리자에게 문의해주세요";
     }
-    res.status(500).send(
+    res.send(
       JSON.stringify({
         message: err.message,
       })
