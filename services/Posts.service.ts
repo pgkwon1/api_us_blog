@@ -27,7 +27,6 @@ class PostsService implements IPostsServiceDomain {
   }
 
   async getPost(id: number): Promise<object> {
-    console.log(id);
     const post = await Posts.findOne({
       where: {
         id,
@@ -47,7 +46,7 @@ class PostsService implements IPostsServiceDomain {
       ],
     });
 
-    if (post === false) {
+    if (!post) {
       throw new Error("게시물이 존재하지 않습니다.");
     }
 
