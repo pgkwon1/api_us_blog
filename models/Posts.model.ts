@@ -2,18 +2,7 @@ import { Association, DataTypes, Model } from "sequelize";
 import { sequelize } from ".";
 import Likes from "./Likes.model";
 import Tags from "./Tags.model";
-
-const category = ["기술", "직장", "잡담"] as const;
-type Category = (typeof category)[keyof typeof category];
-
-interface IPostsDto {
-  id: string;
-  author: string;
-  title: string;
-  contents: string;
-  like: number;
-  category: Category;
-}
+import IPostsDto from "../dto/PostsDto";
 class Posts extends Model<IPostsDto> {
   public id: string;
 

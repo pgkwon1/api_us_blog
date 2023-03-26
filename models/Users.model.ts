@@ -2,15 +2,9 @@ import { Association, DataTypes, Model } from "sequelize";
 import { sequelize } from ".";
 import Posts from "./Posts.model";
 import Likes from "./Likes.model";
+import IUserDto from "../dto/UsersDto";
 
-interface UserAttribute {
-  id: string;
-  userId: string;
-  password: string;
-  nickname: string;
-  salt: string;
-}
-class Users extends Model<UserAttribute> {
+class Users extends Model<IUserDto> {
   public id: string;
 
   public userId: string;
