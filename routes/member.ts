@@ -17,15 +17,15 @@ router.post(
       const User = new UserController();
 
       await User.register(req.body);
+      res.json("success");
     } catch (err) {
       if (err instanceof ReferenceError) {
         err.message = "회원가입에 실패하였습니다 관리자에게 문의해주세요";
       }
-      res.send(
-        JSON.stringify({
-          message: err.message,
-        })
-      );
+      res.json({
+        message: err.message,
+        error: true,
+      });
     }
   }
 );
