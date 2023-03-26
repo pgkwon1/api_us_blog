@@ -28,6 +28,9 @@ app.use("/getCsrf", (req: Request, res: Response) => {
     CSRF_TOKEN: req.csrfToken(),
   });
 });
+app.use((err, req, res, next) => {
+  if (err.status === 403) res.send("비정상적인 접근입니다.");
+});
 app.use("/", indexRouter);
 app.use("/member", memberRouter);
 app.use("/post", postsRouter);
