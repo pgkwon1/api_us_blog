@@ -3,6 +3,7 @@ import { sequelize } from ".";
 import Posts from "./Posts.model";
 import Likes from "./Likes.model";
 import IUserDto from "../dto/UsersDto";
+import Tokens from "./Tokens.model";
 
 class Users extends Model<IUserDto> {
   public id: string;
@@ -22,6 +23,7 @@ class Users extends Model<IUserDto> {
   public static associations: {
     userPosts: Association<Users, Posts>;
     userLikes: Association<Users, Likes>;
+    userTokens: Association<Users, Tokens>;
   };
 }
 Users.init(
@@ -69,5 +71,10 @@ Users.hasMany(Likes, {
   as: "userLikes",
 });
 
+Users.hasMany(Tokens, {
+  foreignKey: "userId",
+  sourceKey: "userId",
+  as: "userTokens",
+});
 Users.sync();
 export default Users;

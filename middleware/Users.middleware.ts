@@ -1,5 +1,6 @@
 import { validateOrReject } from "class-validator";
 import RegisterDto from "../dto/member/RegisterDto";
+import LoginDto from "../dto/member/LoginDto";
 
 interface IErrorList {
   property: string;
@@ -14,6 +15,18 @@ export default class UserMiddleWare {
     register.password = body.password;
     register.nickname = body.nickname;
     await validateOrReject(register).catch((errList) => {
+      let errorMsg = "";
+      errorMsg = this.createValidateErrorMessage(errList);
+      throw new Error(errorMsg);
+    });
+    return true;
+  }
+
+  static async validateLoginBody(body: LoginDto): Promise<boolean> {
+    const login = new LoginDto();
+    login.userId = body.userId;
+    login.password = body.password;
+    await validateOrReject(login).catch((errList) => {
       let errorMsg = "";
       errorMsg = this.createValidateErrorMessage(errList);
       throw new Error(errorMsg);

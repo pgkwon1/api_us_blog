@@ -5,6 +5,19 @@ import Users from "../models/Users.model";
 class UsersService implements IUserServiceDomain {
   constructor() {}
 
+  async getUser(userId: string, password?: string): Promise<object> {
+    const where = password ? { userId, password } : { userId };
+    const userInfo = await Users.findOne({
+      where,
+    });
+
+    if (userInfo === null) {
+      throw new Error("회원정보가 없습니다.");
+    }
+
+    return userInfo;
+  }
+
   async register(registerData: RegisterDto): Promise<boolean> {
     const { userId, password, nickname, salt } = registerData;
     await Users.create({

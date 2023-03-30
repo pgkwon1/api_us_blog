@@ -29,5 +29,19 @@ router.post(
     }
   }
 );
+router.post("/login", csrfProtection, async (req: Request, res: Response) => {
+  try {
+    await UserMiddleWare.validateLoginBody(req.body);
 
+    const User = new UserController();
+    const token = await User.login(req.body);
+
+    res.json({ token });
+  } catch (err) {
+    res.json({
+      message: err.message,
+      error: true,
+    });
+  }
+});
 export default router;
