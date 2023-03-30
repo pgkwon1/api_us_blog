@@ -1,6 +1,9 @@
 import express, { Request, Response } from "express";
-import PostController from "../controllers/Post.controller";
+import csrf from "csurf";
+import PostController from "../controllers/Posts.controller";
+import TokensController from "../controllers/Tokens.controller";
 const router = express.Router();
+const csrfProtection = csrf({ cookie: true });
 
 router.get("/", async (req: Request, res: Response) => {
   try {
@@ -25,6 +28,20 @@ router.get("/posts/:user", async (req: Request, res: Response) => {
     });
   } catch (err) {
     res.status(500).send(err);
+  }
+});
+router.post("/retoken", csrfProtection, async (req: Request, res: Response) => {
+  try {
+    const Tokens = new TokensController();
+    const newAccessToken = await Tokens.reissueToken(req.body.accessToken);
+    res.json({
+      newAccessToken,
+    });
+  } catch (err) {
+    res.json({
+      error: true,
+      message: err.message,
+    });
   }
 });
 /* GET home page. */

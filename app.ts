@@ -1,5 +1,5 @@
 import "express-async-errors";
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 
@@ -7,6 +7,7 @@ import indexRouter from "./routes/index";
 import memberRouter from "./routes/member";
 import postsRouter from "./routes/posts";
 import csrf from "csurf";
+import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(
@@ -22,6 +23,43 @@ if (process.env.NODE_ENV === "production") {
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(csrf({ cookie: true }));
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (req.method !== "GET") {
+      const token =
+        req.headers.authorization &&
+        req.headers.authorization.replace("Bearer ", "");
+      if (token) {
+        jwt.verify(
+          token,
+          process.env.ACCESS_TOKEN_SECRET_KEY,
+          function (err, decoded) {
+            if (err) {
+              throw new Error(err.message);
+            }
+          }
+        );
+      }
+    }
+
+    next();
+  } catch (err) {
+    if (err?.message === "jwt expired") {
+      res.send({
+        error: true,
+        expired: true,
+        message: "Token expired",
+      });
+    } else if (err?.message === "refresh token expired") {
+      res.send({
+        error: true,
+        message: "refresh token expired",
+        refreshToken: true,
+      });
+    }
+  }
+});
 
 app.use("/getCsrf", (req: Request, res: Response) => {
   res.send({
