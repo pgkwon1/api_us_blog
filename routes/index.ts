@@ -16,13 +16,11 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/posts/:user", async (req: Request, res: Response) => {
   try {
-    if (!req.params.user) {
+    if (!req.body.user) {
       throw new Error("비정상적인 접근입니다.");
     }
-    const Post = new PostController({
-      author: req.params.user,
-    });
-    const userPostList = await Post.getUserPostList();
+    const Post = new PostController();
+    const userPostList = await Post.getUserPostList(req.body.user);
     res.status(200).send({
       userPostList,
     });

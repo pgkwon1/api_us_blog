@@ -5,9 +5,7 @@ import { IPostsControllerDomain } from "../domain/controllers/Posts";
 class PostController implements IPostsControllerDomain {
   public author: string;
 
-  constructor(data?) {
-    this.author = data?.author;
-  }
+  constructor() {}
 
   static async getPostsList(): Promise<object> {
     const postList = await PostsService.getPostList();
@@ -21,8 +19,8 @@ class PostController implements IPostsControllerDomain {
     return post;
   }
 
-  async getUserPostList(): Promise<object> {
-    const postService = new PostsService({ author: this.author });
+  async getUserPostList(author: string): Promise<object> {
+    const postService = new PostsService({ author });
     const postList = await postService.getUserPostList();
     return postList;
   }
