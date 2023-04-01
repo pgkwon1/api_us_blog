@@ -64,10 +64,22 @@ Posts.init(
   }
 );
 
-const PostsTags = sequelize.define("PostsTags", {
-  tagId: DataTypes.STRING,
-  postId: DataTypes.STRING,
-});
+const PostsTags = sequelize.define(
+  "PostsTags",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      unique: true,
+    },
+    tagId: DataTypes.STRING,
+    postId: DataTypes.STRING,
+  },
+  {
+    timestamps: false,
+  }
+);
 
 Posts.hasMany(Likes, {
   as: "postsLikes",
@@ -75,12 +87,9 @@ Posts.hasMany(Likes, {
   sourceKey: "id",
 });
 Posts.belongsToMany(Tags, {
-  as: "postsTags",
   through: PostsTags,
 });
 Tags.belongsToMany(Posts, {
-  as: "postsTags",
-
   through: PostsTags,
 });
 export default Posts;
