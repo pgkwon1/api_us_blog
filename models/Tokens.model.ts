@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import ITokensDto from "../dto/TokensDto";
+import ITokensDto from "../dto/models/TokensDto";
 import { sequelize } from ".";
 class Tokens extends Model<ITokensDto> {
   public id: string;
