@@ -2,7 +2,7 @@ import { Association, DataTypes, Model } from "sequelize";
 import { sequelize } from ".";
 import Likes from "./Likes.model";
 import Tags from "./Tags.model";
-import IPostsDto from "../dto/PostsDto";
+import IPostsDto from "../dto/models/PostsDto";
 class Posts extends Model<IPostsDto> {
   public id: string;
 

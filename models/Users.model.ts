@@ -2,7 +2,7 @@ import { Association, DataTypes, Model } from "sequelize";
 import { sequelize } from ".";
 import Posts from "./Posts.model";
 import Likes from "./Likes.model";
-import IUserDto from "../dto/UsersDto";
+import IUserDto from "../dto/models/UsersDto";
 import Tokens from "./Tokens.model";
 
 class Users extends Model<IUserDto> {

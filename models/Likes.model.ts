@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from ".";
-import ILikesDto from "../dto/LikesDto";
+import ILikesDto from "../dto/models/LikesDto";
 class Likes extends Model<ILikesDto> {
   public id: string;
 
