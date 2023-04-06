@@ -3,25 +3,30 @@ import PostsService from "../services/Posts.service";
 import { IPostsControllerDomain } from "../domain/controllers/Posts";
 
 class PostController implements IPostsControllerDomain {
+  public id: string;
+
   public author: string;
 
-  constructor() {}
+  private postService: PostsService;
+
+  constructor(id?: string, author?: string) {
+    this.id = id;
+    this.author = author;
+    this.postService = new PostsService(this.id, this.author);
+  }
 
   static async getPostsList(): Promise<object> {
     const postList = await PostsService.getPostList();
     return postList;
   }
 
-  async getPost(id: number): Promise<object> {
-    const postService = new PostsService();
-    console.log(id);
-    const post = await postService.getPost(id);
+  async getPost(): Promise<object> {
+    const post = await this.postService.getPost();
     return post;
   }
 
-  async getUserPostList(author: string): Promise<object> {
-    const postService = new PostsService({ author });
-    const postList = await postService.getUserPostList();
+  async getUserPostList(): Promise<object> {
+    const postList = await this.postService.getUserPostList();
     return postList;
   }
 }
