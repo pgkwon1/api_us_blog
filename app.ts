@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
-
+import { logger } from "./config/winston";
 import indexRouter from "./routes/index";
 import memberRouter from "./routes/member";
 import postsRouter from "./routes/posts";
@@ -73,7 +73,8 @@ app.use("/", indexRouter);
 app.use("/member", memberRouter);
 app.use("/post", postsRouter);
 app.use(async (err, req, res, next) => {
-  res.status(500).json({
+  logger.error(`error : ${err.stack}`);
+  res.json({
     err,
   });
   if (err.status === 403) res.send("비정상적인 접근입니다.");
