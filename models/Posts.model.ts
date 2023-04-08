@@ -47,6 +47,7 @@ Posts.init(
     like: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
     category: {
       type: DataTypes.ENUM,
