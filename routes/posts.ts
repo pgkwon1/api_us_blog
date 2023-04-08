@@ -1,8 +1,11 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import csrf from "csurf";
 import PostController from "../controllers/Posts.controller";
 import PostMiddleware from "../middleware/Posts.middleware";
 
 const router = express.Router();
+const csrfProtection = csrf({ cookie: true });
 
 router.get("/:id", async (req: Request, res: Response) => {
   try {
@@ -23,4 +26,20 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
+router.post(
+  "/write",
+  csrfProtection,
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await PostMiddleware.validateWriteBody(req.body);
+
+      const Post = new PostController();
+      const result = await Post.store(req.body);
+      res.send(result);
+    } catch (err) {
+      console.log("!!!!!!!", err.stack);
+      next(err.message);
+    }
+  })
+);
 export default router;
