@@ -1,9 +1,9 @@
 import { Association, DataTypes, Model } from "sequelize";
 import { sequelize } from ".";
 import Posts from "./Posts.model";
-import { ITagsDto } from "../dto/models/TagsDto";
+import { ITagsModelDto } from "../dto/models/TagsDto";
 
-class Tags extends Model<ITagsDto> {
+class Tags extends Model<ITagsModelDto> {
   public id: string;
 
   public tagName: string;
