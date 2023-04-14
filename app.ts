@@ -81,6 +81,9 @@ app.use("/member", memberRouter);
 app.use("/post", postsRouter);
 app.use(async (err, req, res, next) => {
   if (err.message === 403) res.send("비정상적인 접근입니다.");
+  if (err instanceof ReferenceError === true) {
+    err = "오류가 발생하였습니다.";
+  }
   logger.error(`error : ${err.stack}`);
   res.json({
     err,
