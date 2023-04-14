@@ -80,7 +80,7 @@ app.use("/", indexRouter);
 app.use("/member", memberRouter);
 app.use("/post", postsRouter);
 app.use(async (err, req, res, next) => {
-  if (err.status === 403) res.send("비정상적인 접근입니다.");
+  if (err.message === 403) res.send("비정상적인 접근입니다.");
   logger.error(`error : ${err.stack}`);
   res.json({
     err,
