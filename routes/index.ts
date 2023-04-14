@@ -5,10 +5,15 @@ import TokensController from "../controllers/Tokens.controller";
 const router = express.Router();
 const csrfProtection = csrf({ cookie: true });
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/page/:page", async (req: Request, res: Response) => {
   try {
-    const postList = await PostController.getPostsList();
-    res.status(200).send(postList);
+    const page: number = req.params.page ?? 1;
+    console.log(req.params.page);
+    const { count, rows } = await PostController.getPostsList(page);
+    res.status(200).send({
+      count,
+      postList: rows,
+    });
   } catch (err) {
     res.status(500).send(err);
   }

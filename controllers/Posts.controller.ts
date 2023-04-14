@@ -20,9 +20,9 @@ class PostController implements IPostsControllerDomain {
     this.tagsController = new TagsController();
   }
 
-  static async getPostsList(): Promise<object> {
-    const postList = await PostsService.getPostList();
-    return postList;
+  static async getPostsList(page: number): Promise<object> {
+    const { count, rows } = await PostsService.getPostList(page);
+    return { count, rows };
   }
 
   async getPost(): Promise<object> {
