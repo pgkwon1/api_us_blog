@@ -14,8 +14,14 @@ class PostsService implements IPostsServiceDomain {
     this.author = author;
   }
 
-  static async getPostList(): Promise<object> {
-    const postList: object = await Posts.findAll({
+  static async getPostList(page: number): Promise<object> {
+    let offset = 0;
+    if (page > 1) {
+      offset = 10 * page;
+    }
+    const { count, rows }: object = await Posts.findAndCountAll({
+      limit: 10,
+      offset,
       include: [
         {
           model: Tags,
@@ -26,7 +32,8 @@ class PostsService implements IPostsServiceDomain {
         { model: Likes, as: "postsLikes" },
       ],
     });
-    return postList;
+
+    return { count, rows };
   }
 
   async getPost(): Promise<object> {
