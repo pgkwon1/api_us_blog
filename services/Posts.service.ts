@@ -22,6 +22,7 @@ class PostsService implements IPostsServiceDomain {
     const { count, rows }: object = await Posts.findAndCountAll({
       limit: 10,
       offset,
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: Tags,
