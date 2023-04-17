@@ -1,3 +1,5 @@
+import IWriteDto from "../../dto/post/WriteDto";
+
 export interface IPostsServiceDomain {
   getPost(): Promise<object>;
   getPostList(): Promise<object>;
