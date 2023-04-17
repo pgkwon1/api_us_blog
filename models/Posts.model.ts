@@ -65,7 +65,7 @@ Posts.init(
   }
 );
 
-const PostsTags = sequelize.define(
+export const PostsTags = sequelize.define(
   "PostsTags",
   {
     id: {

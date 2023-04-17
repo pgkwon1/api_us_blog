@@ -3,6 +3,7 @@ import PostsService from "../services/Posts.service";
 import { IPostsControllerDomain } from "../domain/controllers/Posts";
 import TagsController from "./Tags.controller";
 import IWriteDto from "../dto/post/WriteDto";
+import TagsService from "../services/Tags.service";
 
 class PostController implements IPostsControllerDomain {
   public id: string;
@@ -11,12 +12,15 @@ class PostController implements IPostsControllerDomain {
 
   private postService: PostsService;
 
+  private tagService: TagsService;
+
   private tagsController: TagsController;
 
   constructor(id?: string, author?: string) {
     this.id = id;
     this.author = author;
     this.postService = new PostsService(this.id, this.author);
+    this.tagService = new TagsService();
     this.tagsController = new TagsController();
   }
 
@@ -28,6 +32,11 @@ class PostController implements IPostsControllerDomain {
   async getPost(): Promise<object> {
     const post = await this.postService.getPost();
     return post;
+  }
+
+  async getPostListByTag(tagName: string, page: number): Promise<object> {
+    const postByTag = await this.postService.getPostListByTag(tagName, page);
+    return postByTag;
   }
 
   async getUserPostList(): Promise<object> {

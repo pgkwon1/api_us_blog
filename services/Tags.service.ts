@@ -1,10 +1,38 @@
 import ITagsServiceDomain from "../domain/services/Tags";
 import { ITagsDto } from "../dto/tags/TagsDto";
+import Posts, { PostsTags } from "../models/Posts.model";
 import Tags from "../models/Tags.model";
 
 export default class TagsService implements ITagsServiceDomain {
   constructor() {}
 
+  async getPostListByTag(tagName: string, page: number): Promise<object> {
+    let offset = 0;
+
+    if (page > 1) {
+      offset = page * 10;
+    }
+    const result = await Tags.findOne({
+      where: {
+        tagName,
+      },
+      offset,
+      limit: 10,
+      include: [
+        {
+          model: Posts, 
+          through: PostsTags,
+          include:[
+            { model: Tags },
+          ]
+        }
+      ]
+    })
+    if (result === null) {
+      return []
+    }
+    return result.Posts;    
+  }
   async createTags(tags: ITagsDto[]): Promise<object> {
     
     const result = await Tags.bulkCreate(tags, {
