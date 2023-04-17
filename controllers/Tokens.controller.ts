@@ -20,7 +20,7 @@ class TokensController implements ITokensControllerDomain {
       (err, decoded) => {
         // refresh 토큰도 만료됐다면
         if (err?.message === "jwt expired") {
-          //  throw new Error("refresh token expired");
+          throw new Error("refresh token expired");
         }
       }
     );
