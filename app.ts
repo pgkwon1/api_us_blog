@@ -45,29 +45,23 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next();
   } catch (err) {
     if (err?.message === "jwt expired") {
-      const errData = {
-        error: true,
-        expired: true,
-        message: "Token expired",
-      };
       res.send({
         error: true,
         expired: true,
         message: "Token expired",
       });
     } else if (err?.message === "refresh token expired") {
-      const errData = {
+      res.send({
         error: true,
         refreshToken: true,
         message: "refresh token expired",
-      };
+      });
     } else {
-      const errData = {
+      res.send({
         error: true,
         message: err?.message,
-      };
+      });
     }
-    res.send(errData);
   }
 });
 
