@@ -7,6 +7,10 @@ class Likes extends Model<ILikesDto> {
   public postId: string;
 
   public userId: string;
+
+  public readonly createdAt: Date;
+
+  public readonly updatedAt: Date;
 }
 
 Likes.init(
@@ -23,6 +27,12 @@ Likes.init(
     },
     userId: {
       type: DataTypes.UUID,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
     },
   },
   {
