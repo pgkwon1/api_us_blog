@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import UserController from "../controllers/Users.controller";
 import UserMiddleWare from "../middleware/Users.middleware";
 import csrf from "csurf";
@@ -10,7 +10,7 @@ const csrfProtection = csrf({ cookie: true });
 router.post(
   "/register",
   csrfProtection,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       // 입력값 검사
       await UserMiddleWare.validateRegisterBody(req.body);
@@ -22,26 +22,24 @@ router.post(
       if (err instanceof ReferenceError) {
         err.message = "회원가입에 실패하였습니다 관리자에게 문의해주세요";
       }
-      res.json({
-        message: err.message,
-        error: true,
-      });
+      next(err.message);
     }
   }
 );
-router.post("/login", csrfProtection, async (req: Request, res: Response) => {
-  try {
-    await UserMiddleWare.validateLoginBody(req.body);
+router.post(
+  "/login",
+  csrfProtection,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await UserMiddleWare.validateLoginBody(req.body);
 
-    const User = new UserController();
-    const token = await User.login(req.body);
+      const User = new UserController();
+      const token = await User.login(req.body);
 
-    res.json({ token });
-  } catch (err) {
-    res.json({
-      message: err.message,
-      error: true,
-    });
+      res.json({ token });
+    } catch (err) {
+      next(err.message);
+    }
   }
-});
+);
 export default router;

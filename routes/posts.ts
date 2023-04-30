@@ -7,7 +7,7 @@ import PostMiddleware from "../middleware/Posts.middleware";
 const router = express.Router();
 const csrfProtection = csrf({ cookie: true });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.params.id === false) {
       throw new Error("비정상적인 접근입니다.");
@@ -20,53 +20,53 @@ router.get("/:id", async (req: Request, res: Response) => {
       post,
     });
   } catch (err) {
-    res.send({
-      message: err.message,
-    });
+    next(err.message);
   }
 });
 
-router.get("/tag/:tagName/:page", async (req: Request, res: Response) => {
-  try {
-    if (req.params.tagName === undefined) {
-      throw new Error("비정상적인 접근입니다.");
+router.get(
+  "/tag/:tagName/:page",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (req.params.tagName === undefined) {
+        throw new Error("비정상적인 접근입니다.");
+      }
+      const { tagName } = req.params;
+      const page: number | string = req.params.page ?? 1;
+
+      const Post = new PostController();
+      const postList = await Post.getPostListByTag(tagName, page);
+
+      res.send({
+        postList,
+      });
+    } catch (err) {
+      next(err.message);
     }
-    const { tagName } = req.params;
-    const page: number | string = req.params.page ?? 1;
-
-    const Post = new PostController();
-    const postList = await Post.getPostListByTag(tagName, page);
-
-    res.send({
-      postList,
-    });
-  } catch (err) {
-    res.send({
-      message: err.message,
-    });
   }
-});
+);
 
-router.get("/category/:category/:page", async (req: Request, res: Response) => {
-  try {
-    if (req.params.category === undefined) {
-      throw new Error("비정상적인 접근입니다.");
+router.get(
+  "/category/:category/:page",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (req.params.category === undefined) {
+        throw new Error("비정상적인 접근입니다.");
+      }
+      const { category } = req.params;
+      const page: number | string = req.params.page ?? 1;
+
+      const Post = new PostController();
+      const postList = await Post.getPostListByCategory(category, page);
+
+      res.send({
+        postList,
+      });
+    } catch (err) {
+      next(err.message);
     }
-    const { category } = req.params;
-    const page: number | string = req.params.page ?? 1;
-
-    const Post = new PostController();
-    const postList = await Post.getPostListByCategory(category, page);
-
-    res.send({
-      postList,
-    });
-  } catch (err) {
-    res.send({
-      message: err.message,
-    });
   }
-});
+);
 
 router.post(
   "/write",
@@ -79,7 +79,6 @@ router.post(
       const result = await Post.store(req.body);
       res.send(result);
     } catch (err) {
-      console.log("!!!!!!!", err.stack);
       next(err.message);
     }
   })
