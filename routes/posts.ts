@@ -47,6 +47,27 @@ router.get("/tag/:tagName/:page", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/category/:category/:page", async (req: Request, res: Response) => {
+  try {
+    if (req.params.category === undefined) {
+      throw new Error("비정상적인 접근입니다.");
+    }
+    const { category } = req.params;
+    const page: number | string = req.params.page ?? 1;
+
+    const Post = new PostController();
+    const postList = await Post.getPostListByCategory(category, page);
+
+    res.send({
+      postList,
+    });
+  } catch (err) {
+    res.send({
+      message: err.message,
+    });
+  }
+});
+
 router.post(
   "/write",
   csrfProtection,

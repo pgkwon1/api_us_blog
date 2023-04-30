@@ -73,6 +73,23 @@ class PostsService implements IPostsServiceDomain {
     return userPostList;
   }
 
+  async getPostListByCategory(category: string, page: number): Promise<object> {
+    let offset = 0;
+    if (page > 1) {
+      offset = page * 10;
+    }
+    const postListByCategory = await Posts.findAll({
+      where: {
+        category,
+      },
+      offset,
+      limit: 10,
+      include: { model: Tags },
+    });
+
+    return postListByCategory;
+  }
+
   async store(data: IWriteDto): Promise<object> {
     const { author, title, contents, category } = data;
 

@@ -35,8 +35,16 @@ class PostController implements IPostsControllerDomain {
   }
 
   async getPostListByTag(tagName: string, page: number): Promise<object> {
-    const postByTag = await this.postService.getPostListByTag(tagName, page);
+    const postByTag = await this.tagService.getPostListByTag(tagName, page);
     return postByTag;
+  }
+
+  async getPostListByCategory(category: string, page: number): Promise<object> {
+    const postByCategory = await this.postService.getPostListByCategory(
+      category,
+      page
+    );
+    return postByCategory;
   }
 
   async getUserPostList(): Promise<object> {
