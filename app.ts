@@ -81,7 +81,8 @@ app.use(async (err, req, res, next) => {
   }
   logger.error(`error : ${err.message}`);
   res.json({
-    err,
+    error: true,
+    message: err.message,
   });
 });
 app.listen(3001, async () => {});
