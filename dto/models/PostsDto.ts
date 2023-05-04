@@ -7,5 +7,6 @@ export default interface IPostsDto {
   title: string;
   contents: string;
   like: number;
+  unlike: number;
   category: Category;
 }

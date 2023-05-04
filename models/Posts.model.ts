@@ -14,6 +14,8 @@ class Posts extends Model<IPostsDto> {
 
   public like: number;
 
+  public unlike: number;
+
   public readonly createdAt;
 
   public readonly updateAt;
@@ -45,6 +47,11 @@ Posts.init(
       allowNull: false,
     },
     like: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    unlike: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
