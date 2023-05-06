@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from "express";
-import asyncHandler from "express-async-handler";
 import csrf from "csurf";
 import PostController from "../controllers/Posts.controller";
 import PostMiddleware from "../middleware/Posts.middleware";
@@ -71,7 +70,7 @@ router.get(
 router.post(
   "/write",
   csrfProtection,
-  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       await PostMiddleware.validateWriteBody(req.body);
 
@@ -81,6 +80,6 @@ router.post(
     } catch (err) {
       next(err.message);
     }
-  })
+  }
 );
 export default router;
