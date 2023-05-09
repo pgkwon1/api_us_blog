@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
+import cors from "cors";
 import { logger } from "./config/winston";
 import indexRouter from "./routes/index";
 import memberRouter from "./routes/member";
@@ -8,7 +9,15 @@ import postsRouter from "./routes/posts";
 import csrf from "csurf";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
+
 const app = express();
+
+app.use(
+  cors({
+    origin: "https://front-us-blog.vercel.app/*",
+    crendentials: true,
+  })
+);
 app.use(
   bodyParser.urlencoded({
     extended: true,
