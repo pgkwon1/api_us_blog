@@ -6,6 +6,7 @@ import { logger } from "./config/winston";
 import indexRouter from "./routes/index";
 import memberRouter from "./routes/member";
 import postsRouter from "./routes/posts";
+import likesRouter from "./routes/likes";
 import csrf from "csurf";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
@@ -82,6 +83,8 @@ app.use("/getCsrf", (req: Request, res: Response) => {
 app.use("/", indexRouter);
 app.use("/member", memberRouter);
 app.use("/post", postsRouter);
+app.use("/like", likesRouter);
+
 app.use(async (err, req, res, next) => {
   if (err.message === 403) res.send("비정상적인 접근입니다.");
   if (err instanceof ReferenceError === true) {
