@@ -18,6 +18,7 @@ export default class TagsService implements ITagsServiceDomain {
       },
       offset,
       limit: 10,
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: Posts, 
