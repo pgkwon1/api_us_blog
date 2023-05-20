@@ -84,6 +84,7 @@ class PostsService implements IPostsServiceDomain {
       },
       offset,
       limit: 10,
+      order: [["createdAt", "DESC"]],
       include: { model: Tags },
     });
 
