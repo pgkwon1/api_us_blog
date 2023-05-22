@@ -6,23 +6,6 @@ import PostMiddleware from "../middleware/Posts.middleware";
 const router = express.Router();
 const csrfProtection = csrf({ cookie: true });
 
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (req.params.id === false) {
-      throw new Error("비정상적인 접근입니다.");
-    }
-    const { id } = req.params;
-    const Post = new PostController(id);
-    const post = await Post.getPost();
-
-    res.send({
-      post,
-    });
-  } catch (err) {
-    next(err.message);
-  }
-});
-
 router.get(
   "/tag/:tagName/:page",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -82,4 +65,21 @@ router.post(
     }
   }
 );
+
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (req.params.id === undefined) {
+      throw new Error("비정상적인 접근입니다.");
+    }
+    const { id } = req.params;
+    const Post = new PostController(id);
+    const post = await Post.getPost();
+
+    res.send({
+      post,
+    });
+  } catch (err) {
+    next(err.message);
+  }
+});
 export default router;
