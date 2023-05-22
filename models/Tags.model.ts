@@ -8,6 +8,10 @@ class Tags extends Model<ITagsModelDto> {
 
   public tagName: string;
 
+  public readonly createdAt;
+
+  public readonly updateAt;
+
   public static associations: { postsTags: Association<Posts, Tags> };
 }
 
@@ -32,7 +36,7 @@ Tags.init(
     sequelize,
     charset: "utf8mb4",
     collate: "utf8mb4_general_ci",
-    timestamps: false,
+    timestamps: true,
   }
 );
 
