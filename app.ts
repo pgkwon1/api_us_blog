@@ -86,7 +86,7 @@ app.use("/", indexRouter);
 app.use("/member", memberRouter);
 app.use("/post", postsRouter);
 app.use("/like", likesRouter);
-app.use("/comment", likesRouter);
+app.use("/comment", commentsRouter);
 
 app.use(async (err, req, res, next) => {
   if (err.message === 403) res.send("비정상적인 접근입니다.");
