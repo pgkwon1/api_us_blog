@@ -3,6 +3,7 @@ import { sequelize } from ".";
 import Likes from "./Likes.model";
 import Tags from "./Tags.model";
 import IPostsDto from "../dto/models/PostsDto";
+import Comments from "./Comments.model";
 class Posts extends Model<IPostsDto> {
   public id: string;
 
@@ -99,5 +100,10 @@ Posts.belongsToMany(Tags, {
 });
 Tags.belongsToMany(Posts, {
   through: PostsTags,
+});
+Posts.hasMany(Comments, {
+  as: "postsComments",
+  foreignKey: "postId",
+  sourceKey: "id",
 });
 export default Posts;

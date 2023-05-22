@@ -7,6 +7,8 @@ import indexRouter from "./routes/index";
 import memberRouter from "./routes/member";
 import postsRouter from "./routes/posts";
 import likesRouter from "./routes/likes";
+import commentsRouter from "./routes/comments";
+
 import csrf from "csurf";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
@@ -84,6 +86,7 @@ app.use("/", indexRouter);
 app.use("/member", memberRouter);
 app.use("/post", postsRouter);
 app.use("/like", likesRouter);
+app.use("/comment", likesRouter);
 
 app.use(async (err, req, res, next) => {
   if (err.message === 403) res.send("비정상적인 접근입니다.");
