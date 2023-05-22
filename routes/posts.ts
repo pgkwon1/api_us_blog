@@ -51,20 +51,6 @@ router.get(
   }
 );
 
-router.get(
-  "/popular",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const Post = new PostController();
-      const popularList: IPostListResult = await Post.getPopularList();
-      res.send(popularList);
-    } catch (err) {
-      console.log(err);
-      next(err);
-    }
-  }
-);
-
 router.post(
   "/write",
   csrfProtection,
