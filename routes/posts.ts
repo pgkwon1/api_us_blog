@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import csrf from "csurf";
 import PostController from "../controllers/Posts.controller";
 import PostMiddleware from "../middleware/Posts.middleware";
+import { IPostListResult } from "../dto/post/PostDto";
 
 const router = express.Router();
 const csrfProtection = csrf({ cookie: true });
@@ -46,6 +47,20 @@ router.get(
       });
     } catch (err) {
       next(err.message);
+    }
+  }
+);
+
+router.get(
+  "/popular",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const Post = new PostController();
+      const popularList: IPostListResult = await Post.getPopularList();
+      res.send(popularList);
+    } catch (err) {
+      console.log(err);
+      next(err);
     }
   }
 );
