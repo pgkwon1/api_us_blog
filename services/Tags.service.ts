@@ -7,17 +7,11 @@ export default class TagsService implements ITagsServiceDomain {
   constructor() {}
 
   async getPostListByTag(tagName: string, page: number): Promise<object> {
-    let offset = 0;
 
-    if (page > 1) {
-      offset = page * 10;
-    }
     const result = await Tags.findOne({
       where: {
         tagName,
       },
-      offset,
-      limit: 10,
       order: [["createdAt", "DESC"]],
       include: [
         {
