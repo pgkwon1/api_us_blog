@@ -16,10 +16,8 @@ class PostController implements IPostsControllerDomain {
 
   private tagsController: TagsController;
 
-  constructor(id?: string, author?: string) {
-    this.id = id;
-    this.author = author;
-    this.postService = new PostsService(this.id, this.author);
+  constructor() {
+    this.postService = new PostsService();
     this.tagService = new TagsService();
     this.tagsController = new TagsController();
   }
@@ -29,8 +27,8 @@ class PostController implements IPostsControllerDomain {
     return { count, rows };
   }
 
-  async getPost(): Promise<object> {
-    const post = await this.postService.getPost();
+  async getPost(id: string): Promise<object> {
+    const post = await this.postService.getPost(id);
     return post;
   }
 
@@ -47,8 +45,8 @@ class PostController implements IPostsControllerDomain {
     return postByCategory;
   }
 
-  async getUserPostList(): Promise<object> {
-    const postList = await this.postService.getUserPostList();
+  async getUserPostList(author: string): Promise<object> {
+    const postList = await this.postService.getUserPostList(author);
     return postList;
   }
 

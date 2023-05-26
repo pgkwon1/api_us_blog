@@ -5,14 +5,7 @@ import Likes from "../models/Likes.model";
 import Posts from "../models/Posts.model";
 import Tags from "../models/Tags.model";
 class PostsService implements IPostsServiceDomain {
-  public id: string;
-
-  public author: string;
-
-  constructor(id: string, author: string) {
-    this.id = id;
-    this.author = author;
-  }
+  constructor() {}
 
   static async getPostList(page: number): Promise<object> {
     let offset = 0;
@@ -37,10 +30,10 @@ class PostsService implements IPostsServiceDomain {
     return { count, rows };
   }
 
-  async getPost(): Promise<object> {
+  async getPost(id: string): Promise<object> {
     const post = await Posts.findOne({
       where: {
-        id: this.id,
+        id,
       },
       include: [
         {
@@ -63,10 +56,10 @@ class PostsService implements IPostsServiceDomain {
     return post;
   }
 
-  async getUserPostList(): Promise<object> {
+  async getUserPostList(author: string): Promise<object> {
     const userPostList: object = await Posts.findAll({
       where: {
-        author: this.author,
+        author,
       },
       include: [{ model: Likes, as: "postsLikes" }],
     });
