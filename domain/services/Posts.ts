@@ -1,11 +1,11 @@
-import { IPostListResult } from "../../dto/post/PostDto";
+import { IPostEditRequestBody } from "../../dto/post/EditDto";
 import IWriteDto from "../../dto/post/WriteDto";
+import Posts from "../../models/Posts.model";
 
 export interface IPostsServiceDomain {
-  getPost(userId: string): Promise<object>;
-  getPostList(): Promise<object>;
-  getUserPostList(author: string): Promise<object>;
+  getPost(id: string): Promise<Posts>;
+  getUserPostList(author: string): Promise<Posts[]>;
   getPostListByCategory(category: string, page: number): Promise<object>;
-  editPost(): Promise<boolean>;
+  editPost(editData: IPostEditRequestBody, postInstance: Posts);
   store(data: IWriteDto): Promise<object>;
 }

@@ -39,3 +39,8 @@ export interface IPostListResult {
   count: number;
   postList: IPostList[];
 }
+
+export interface IPostsCountResult<T> {
+  count: number;
+  rows: T[];
+}
