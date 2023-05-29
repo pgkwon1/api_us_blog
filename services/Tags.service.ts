@@ -49,22 +49,24 @@ export default class TagsService implements ITagsServiceDomain {
   ): Promise<boolean> {
     
     let result: boolean = true;
+    const promiseArr: Promise<Model>[] = [];
     for await (let i = 0; i < tags.length; i++) {
       const tagInfo = tags[i];      
       
-      if (!tagInfo) {
-        result = false;
-        break;
-      }
-      await postInstance.addTags(tagInfo, 
-        {
-          through: {
-            order: i + 1
+      promiseArr.push(
+        postInstance.addTags(tagInfo, 
+          {
+            through: {
+              order: i + 1
+            }
           }
-        });
+        )
+      )
     }
     
-    if (result === false) {
+    try {
+      await Promise.all(promiseArr);
+    } catch (err) {
       throw new Error("태그 생성에 실패하였습니다.");
     }
     return true;
@@ -81,14 +83,17 @@ export default class TagsService implements ITagsServiceDomain {
 
     for await (let i = 0; i < tags.length; i++) {
       const tagInfo = tags[i]
-      if (!tagInfo) {
-        result = false;
-        break;
-      }
-      tagInfo.dataValues.order = i;
 
       //태그 순서부분 구현하기
-      promiseArr.push(postInstance.addTags(tagInfo, {through: { order : i + 1}}));
+      promiseArr.push(
+        postInstance.addTags(tagInfo, 
+          {
+            through: { 
+              order : i + 1
+            }
+          }
+        )
+      );
     }
     try {
       await Promise.all(promiseArr)
@@ -98,17 +103,4 @@ export default class TagsService implements ITagsServiceDomain {
     return true;
   }
 
-  static sortPostTags(post) {
-    post.Tags.sort((a, b) => {
-      return a.PostsTags.order - b.PostsTags.order;
-    });
-    return post;
-  }
-
-  static sortPostListTags(postList) {
-    postList.map((post) =>
-      post.Tags.sort((a, b) => a.PostsTags.order - b.PostsTags.order)
-    );
-    return postList;
-  }
 }
