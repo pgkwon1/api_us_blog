@@ -6,6 +6,8 @@ import IWriteDto from "../dto/post/WriteDto";
 import TagsService from "../services/Tags.service";
 import { IPostEditRequestBody } from "../dto/post/EditDto";
 import Tags from "../models/Tags.model";
+import TagsUtil from "../util/Tags.util";
+import { IPostList } from "../dto/post/PostDto";
 
 class PostController implements IPostsControllerDomain {
   public id: string;
@@ -25,12 +27,17 @@ class PostController implements IPostsControllerDomain {
   }
 
   static async getPostsList(page: number): Promise<object> {
-    const { count, rows } = await PostsService.getPostList(page);
+    let { count, rows } = (await PostsService.getPostList(page)) as unknown as {
+      count: number;
+      rows: IPostList[];
+    };
+    rows = TagsUtil.sortPostListTags(rows);
     return { count, rows };
   }
 
   async getPost(id: string): Promise<object> {
-    const post = await this.postService.getPost(id);
+    let post = (await this.postService.getPost(id)) as unknown as IPostList;
+    post = TagsUtil.sortPostTags(post);
     return post;
   }
 

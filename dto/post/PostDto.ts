@@ -6,6 +6,7 @@ export type LikeType = (typeof likeType)[keyof typeof likeType];
 export interface IPostsTags {
   postId: string;
   tagId: string;
+  order: number;
 }
 export interface ITags {
   PostsTags: IPostsTags;

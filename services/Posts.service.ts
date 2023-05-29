@@ -14,21 +14,20 @@ class PostsService implements IPostsServiceDomain {
     if (page > 1) {
       offset = 10 * page;
     }
-    const { count, rows }: IPostsCountResult<Posts> =
-      await Posts.findAndCountAll({
-        limit: 10,
-        offset,
-        order: [["createdAt", "DESC"]],
-        include: [
-          {
-            model: Tags,
-            through: {
-              attributes: ["tagId", "postId"],
-            },
+    const { count, rows } = await Posts.findAndCountAll({
+      limit: 10,
+      offset,
+      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: Tags,
+          through: {
+            attributes: ["tagId", "postId", "order"],
           },
-          { model: Likes, as: "postsLikes" },
-        ],
-      });
+        },
+        { model: Likes, as: "postsLikes" },
+      ],
+    });
 
     return { count, rows };
   }
@@ -42,7 +41,7 @@ class PostsService implements IPostsServiceDomain {
         {
           model: Tags,
           through: {
-            attributes: ["postId", "tagId"],
+            attributes: ["postId", "tagId", "order"],
           },
         },
         {
