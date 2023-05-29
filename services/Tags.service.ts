@@ -29,7 +29,7 @@ export default class TagsService implements ITagsServiceDomain {
     }
     return result.Posts;    
   }
-  async createTags(tags: ITagsDto[]): Promise<object> {
+  async createTags(tags: ITagsDto[]): Promise<Tags[]> {
     
     const result = await Tags.bulkCreate(tags, {
       ignoreDuplicates: true,
@@ -44,26 +44,24 @@ export default class TagsService implements ITagsServiceDomain {
   }
 
   async createPostsTags(
-    tags: ITagsDto[],
+    tags: Tags[],
     postInstance: object
   ): Promise<boolean> {
     
     let result: boolean = true;
     for await (let i = 0; i < tags.length; i++) {
-      const { tagName } = tags[i]
-
-      console.log("num", i)
-      const tagInfo = await Tags.findOne({
-        where: {
-          tagName,
-        },
-      });
+      const tagInfo = tags[i];      
       
       if (!tagInfo) {
         result = false;
         break;
       }
-      await postInstance.addTags(tagInfo);
+      await postInstance.addTags(tagInfo, 
+        {
+          through: {
+            order: i + 1
+          }
+        });
     }
     
     if (result === false) {
@@ -73,7 +71,7 @@ export default class TagsService implements ITagsServiceDomain {
   }
 
   async updatePostsTags(
-    tags: ITagsDto[],
+    tags: Tags[],
     postInstance: object
   ): Promise<boolean> {
     let result: boolean = true;
@@ -98,5 +96,19 @@ export default class TagsService implements ITagsServiceDomain {
       throw new Error("태그 생성에 실패하였습니다.");
     }
     return true;
+  }
+
+  static sortPostTags(post) {
+    post.Tags.sort((a, b) => {
+      return a.PostsTags.order - b.PostsTags.order;
+    });
+    return post;
+  }
+
+  static sortPostListTags(postList) {
+    postList.map((post) =>
+      post.Tags.sort((a, b) => a.PostsTags.order - b.PostsTags.order)
+    );
+    return postList;
   }
 }
