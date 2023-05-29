@@ -84,6 +84,7 @@ export const PostsTags = sequelize.define(
     },
     tagId: DataTypes.STRING,
     postId: DataTypes.STRING,
+    order: DataTypes.INTEGER,
   },
   {
     timestamps: true,
