@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { IPostsServiceDomain } from "../domain/services/Posts";
+import { IPostEditRequestBody } from "../dto/post/EditDto";
 import IWriteDto from "../dto/post/WriteDto";
 import Likes from "../models/Likes.model";
 import Posts from "../models/Posts.model";
@@ -82,6 +83,14 @@ class PostsService implements IPostsServiceDomain {
     });
 
     return postListByCategory;
+  }
+
+  async editPost(
+    editData: IPostEditRequestBody,
+    postInstance
+  ): Promise<boolean> {
+    await postInstance.update(editData);
+    return true;
   }
 
   async store(data: IWriteDto): Promise<object> {

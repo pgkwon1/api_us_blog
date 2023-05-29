@@ -1,3 +1,4 @@
+import { Model } from "sequelize";
 import ITagsServiceDomain from "../domain/services/Tags";
 import { ITagsDto } from "../dto/tags/TagsDto";
 import Posts, { PostsTags } from "../models/Posts.model";
@@ -33,12 +34,12 @@ export default class TagsService implements ITagsServiceDomain {
     const result = await Tags.bulkCreate(tags, {
       ignoreDuplicates: true,
       fields: ["tagName", "id"],
+      returning: true,
     });
 
     if (!result) {
       throw new Error("태그 생성에 실패하였습니다.");
     }
-    console.log("here result", result);
     return result;
   }
 
@@ -57,7 +58,7 @@ export default class TagsService implements ITagsServiceDomain {
           tagName,
         },
       });
-
+      
       if (!tagInfo) {
         result = false;
         break;
@@ -66,6 +67,34 @@ export default class TagsService implements ITagsServiceDomain {
     }
     
     if (result === false) {
+      throw new Error("태그 생성에 실패하였습니다.");
+    }
+    return true;
+  }
+
+  async updatePostsTags(
+    tags: ITagsDto[],
+    postInstance: object
+  ): Promise<boolean> {
+    let result: boolean = true;
+
+    await PostsTags.destroy({where:{postId: postInstance.id}});
+    const promiseArr: Promise<Model>[] = [];
+
+    for await (let i = 0; i < tags.length; i++) {
+      const tagInfo = tags[i]
+      if (!tagInfo) {
+        result = false;
+        break;
+      }
+      tagInfo.dataValues.order = i;
+
+      //태그 순서부분 구현하기
+      promiseArr.push(postInstance.addTags(tagInfo, {through: { order : i + 1}}));
+    }
+    try {
+      await Promise.all(promiseArr)
+    } catch (err) {
       throw new Error("태그 생성에 실패하였습니다.");
     }
     return true;

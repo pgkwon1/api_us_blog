@@ -6,5 +6,6 @@ export interface IPostsServiceDomain {
   getPostList(): Promise<object>;
   getUserPostList(author: string): Promise<object>;
   getPostListByCategory(category: string, page: number): Promise<object>;
+  editPost(): Promise<boolean>;
   store(data: IWriteDto): Promise<object>;
 }

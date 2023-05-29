@@ -4,6 +4,7 @@ import { IPostsControllerDomain } from "../domain/controllers/Posts";
 import TagsController from "./Tags.controller";
 import IWriteDto from "../dto/post/WriteDto";
 import TagsService from "../services/Tags.service";
+import { IPostEditRequestBody } from "../dto/post/EditDto";
 
 class PostController implements IPostsControllerDomain {
   public id: string;
@@ -48,6 +49,17 @@ class PostController implements IPostsControllerDomain {
   async getUserPostList(author: string): Promise<object> {
     const postList = await this.postService.getUserPostList(author);
     return postList;
+  }
+
+  async editPost(editData: IPostEditRequestBody): Promise<boolean> {
+    const postInstance = await this.postService.getPost(editData.id);
+    if (postInstance.author !== editData.author) {
+      throw new Error("비정상적인 접근입니다.");
+    }
+    await this.postService.editPost(editData, postInstance);
+    const createTags = await this.tagService.createTags(editData.tags);
+    await this.tagService.updatePostsTags(createTags, postInstance);
+    return true;
   }
 
   async store(data: IWriteDto): Promise<string> {
