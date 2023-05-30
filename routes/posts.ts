@@ -66,15 +66,27 @@ router.post(
     }
   }
 );
-
+router.patch(
+  "/edit",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const Post = new PostController();
+      const editData = req.body;
+      const result = await Post.editPost(editData);
+      res.send(result);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.params.id === undefined) {
       throw new Error("비정상적인 접근입니다.");
     }
     const { id } = req.params;
-    const Post = new PostController(id);
-    const post = await Post.getPost();
+    const Post = new PostController();
+    const post = await Post.getPost(id);
 
     res.send({
       post,

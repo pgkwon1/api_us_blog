@@ -1,25 +1,20 @@
 /* eslint-disable class-methods-use-this */
 import { IPostsServiceDomain } from "../domain/services/Posts";
+import { IPostEditRequestBody } from "../dto/post/EditDto";
+import { IPostsCountResult } from "../dto/post/PostDto";
 import IWriteDto from "../dto/post/WriteDto";
 import Likes from "../models/Likes.model";
 import Posts from "../models/Posts.model";
 import Tags from "../models/Tags.model";
 class PostsService implements IPostsServiceDomain {
-  public id: string;
+  constructor() {}
 
-  public author: string;
-
-  constructor(id: string, author: string) {
-    this.id = id;
-    this.author = author;
-  }
-
-  static async getPostList(page: number): Promise<object> {
+  static async getPostList(page: number): Promise<IPostsCountResult<Posts>> {
     let offset = 0;
     if (page > 1) {
       offset = 10 * page;
     }
-    const { count, rows }: object = await Posts.findAndCountAll({
+    const { count, rows } = await Posts.findAndCountAll({
       limit: 10,
       offset,
       order: [["createdAt", "DESC"]],
@@ -27,7 +22,7 @@ class PostsService implements IPostsServiceDomain {
         {
           model: Tags,
           through: {
-            attributes: ["tagId", "postId"],
+            attributes: ["tagId", "postId", "order"],
           },
         },
         { model: Likes, as: "postsLikes" },
@@ -37,16 +32,16 @@ class PostsService implements IPostsServiceDomain {
     return { count, rows };
   }
 
-  async getPost(): Promise<object> {
-    const post = await Posts.findOne({
+  async getPost(id: string): Promise<Posts> {
+    const post: Posts = await Posts.findOne({
       where: {
-        id: this.id,
+        id,
       },
       include: [
         {
           model: Tags,
           through: {
-            attributes: ["postId", "tagId"],
+            attributes: ["postId", "tagId", "order"],
           },
         },
         {
@@ -63,22 +58,25 @@ class PostsService implements IPostsServiceDomain {
     return post;
   }
 
-  async getUserPostList(): Promise<object> {
-    const userPostList: object = await Posts.findAll({
+  async getUserPostList(author: string): Promise<Posts[]> {
+    const userPostList: Posts[] = await Posts.findAll({
       where: {
-        author: this.author,
+        author,
       },
       include: [{ model: Likes, as: "postsLikes" }],
     });
     return userPostList;
   }
 
-  async getPostListByCategory(category: string, page: number): Promise<object> {
+  async getPostListByCategory(
+    category: string,
+    page: number
+  ): Promise<Posts[]> {
     let offset = 0;
     if (page > 1) {
       offset = page * 10;
     }
-    const postListByCategory = await Posts.findAll({
+    const postListByCategory: Posts[] = await Posts.findAll({
       where: {
         category,
       },
@@ -89,6 +87,14 @@ class PostsService implements IPostsServiceDomain {
     });
 
     return postListByCategory;
+  }
+
+  async editPost(
+    editData: IPostEditRequestBody,
+    postInstance: Posts
+  ): Promise<boolean> {
+    await postInstance.update(editData);
+    return true;
   }
 
   async store(data: IWriteDto): Promise<object> {
