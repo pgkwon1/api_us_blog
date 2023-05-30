@@ -26,7 +26,7 @@ class PostController implements IPostsControllerDomain {
     this.tagsController = new TagsController();
   }
 
-  static async getPostsList(page: number): Promise<object> {
+  async getPostsList(page: number): Promise<object> {
     let { count, rows } = (await PostsService.getPostList(page)) as unknown as {
       count: number;
       rows: IPostList[];

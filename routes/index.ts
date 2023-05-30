@@ -10,7 +10,8 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page: number = req.params.page ?? 1;
-      const { count, rows } = await PostController.getPostsList(page);
+      const Post = new PostController();
+      const { count, rows } = await Post.getPostsList(page);
       res.status(200).send({
         count,
         postList: rows,
