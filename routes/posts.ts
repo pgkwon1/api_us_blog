@@ -79,26 +79,6 @@ router.patch(
     }
   }
 );
-
-router.delete(
-  "/delete",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.body;
-      if (id === undefined) {
-        throw new Error("비정상적인 접근입니다.");
-      }
-
-      const Post = new PostController();
-      const result = await Post.deletePost(id);
-      res.send({
-        result,
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.params.id === undefined) {

@@ -70,16 +70,6 @@ class PostController implements IPostsControllerDomain {
     return true;
   }
 
-  async deletePost(id: string): Promise<boolean> {
-    const oldPost = await this.getPost(id);
-    if (oldPost === null) {
-      throw new Error("삭제할 게시물이 존재하지 않습니다.");
-    }
-
-    await this.postService.deletePost(id);
-    return true;
-  }
-
   async store(data: IWriteDto): Promise<string> {
     const postInstance = await this.postService.store(data);
     await this.tagsController.createTags(data.tags, postInstance);
