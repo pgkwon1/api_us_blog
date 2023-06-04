@@ -7,5 +7,6 @@ export interface IPostsControllerDomain {
   getPostListByTag(tagName: string, page: number): Promise<object>;
   getUserPostList(author: string): Promise<object>;
   editPost(editData: IPostEditRequestBody): Promise<boolean>;
+  deletePost(id: string): Promise<boolean>;
   store(data: IWriteDto): Promise<string>;
 }
