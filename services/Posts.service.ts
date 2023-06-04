@@ -1,11 +1,15 @@
 /* eslint-disable class-methods-use-this */
+import { Transaction } from "sequelize";
 import { IPostsServiceDomain } from "../domain/services/Posts";
 import { IPostEditRequestBody } from "../dto/post/EditDto";
 import { IPostsCountResult } from "../dto/post/PostDto";
 import IWriteDto from "../dto/post/WriteDto";
+import { sequelize } from "../models";
 import Likes from "../models/Likes.model";
-import Posts from "../models/Posts.model";
+import Posts, { PostsTags } from "../models/Posts.model";
 import Tags from "../models/Tags.model";
+import Comments from "../models/Comments.model";
+
 class PostsService implements IPostsServiceDomain {
   constructor() {}
 
@@ -94,6 +98,42 @@ class PostsService implements IPostsServiceDomain {
     postInstance: Posts
   ): Promise<boolean> {
     await postInstance.update(editData);
+    return true;
+  }
+
+  async deletePost(id: string): Promise<boolean> {
+    const transaction: Transaction = await sequelize.transaction();
+    try {
+      await PostsTags.destroy({
+        where: {
+          postId: id,
+        },
+        transaction,
+      });
+
+      await Comments.destroy({
+        where: {
+          postId: id,
+        },
+        transaction,
+      });
+      await Likes.destroy({
+        where: {
+          postId: id,
+        },
+        transaction,
+      });
+      await Posts.destroy({
+        where: {
+          id,
+        },
+        transaction,
+      });
+      await transaction.commit();
+    } catch (err) {
+      await transaction.rollback();
+      throw new Error("게시물 삭제에 실패하였습니다.");
+    }
     return true;
   }
 

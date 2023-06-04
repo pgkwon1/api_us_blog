@@ -8,5 +8,6 @@ export interface IPostsServiceDomain {
   getUserPostList(author: string): Promise<Posts[]>;
   getPostListByCategory(category: string, page: number): Promise<object>;
   editPost(editData: IPostEditRequestBody, postInstance: Posts);
+  deletePost(id: string): Promise<boolean>;
   store(data: IWriteDto): Promise<object>;
 }
