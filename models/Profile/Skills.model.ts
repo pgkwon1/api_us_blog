@@ -12,8 +12,6 @@ class Skills extends Model<ISkillsDto> {
   public name: string;
 
   public category: string;
-
-  constructor() {}
 }
 
 Skills.init(
