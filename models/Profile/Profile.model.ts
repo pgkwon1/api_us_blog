@@ -1,4 +1,4 @@
-import { DataTypes, Model, UUIDV4 } from "sequelize";
+import { Association, DataTypes, Model } from "sequelize";
 import { sequelize } from "..";
 import Skills from "./Skills.model";
 
@@ -17,14 +17,16 @@ class Profile extends Model<IProfileDto> {
 
   public aboutMe: string;
 
-  constructor() {}
+  public static association: {
+    profileSkills: Association<Profile, Skills>;
+  };
 }
 
 Profile.init(
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       unique: true,
       primaryKey: true,
     },
@@ -62,7 +64,7 @@ export const ProfileSkills = sequelize.define(
     profileId: {
       type: DataTypes.UUID,
     },
-    userId: {
+    skillsId: {
       type: DataTypes.UUID,
     },
   },
