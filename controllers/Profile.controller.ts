@@ -12,6 +12,11 @@ class ProfileController implements IProfileControllerDomain {
     await this.profileService.createEmptyProfile(userId);
     return true;
   }
+
+  async getProfile(userId: string): Promise<object> {
+    const profile = await this.profileService.getProfile(userId);
+    return profile;
+  }
 }
 
 export default ProfileController;

@@ -1,9 +1,33 @@
 /* eslint-disable class-methods-use-this */
+import { Sequelize } from "sequelize";
 import { IProfileServiceDomain } from "../domain/services/Profile";
 import Profile from "../models/Profile/Profile.model";
+import Skills from "../models/Profile/Skills.model";
 
 class ProfileService implements IProfileServiceDomain {
   constructor() {}
+
+  async getProfile(userId: string): Promise<object> {
+    const result = await Profile.findOne({
+      where: {
+        userId,
+      },
+      include: [
+        {
+          model: Skills,
+          through: {
+            attributes: ["profileId", "skillsId"],
+          },
+        },
+      ],
+      order: [[Sequelize.literal("Skills.category"), "DESC"]],
+    });
+
+    if (result === null) {
+      throw new Error("프로필이 존재하지 않습니다.");
+    }
+    return result;
+  }
 
   async createEmptyProfile(userId: string): Promise<boolean> {
     const result = await Profile.create({
