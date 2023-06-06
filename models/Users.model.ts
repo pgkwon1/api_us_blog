@@ -4,6 +4,8 @@ import Posts from "./Posts.model";
 import Likes from "./Likes.model";
 import IUserDto from "../dto/models/UsersDto";
 import Tokens from "./Tokens.model";
+import Comments from "./Comments.model";
+import Profile from "./Profile/Profile.model";
 
 class Users extends Model<IUserDto> {
   public id: string;
@@ -76,5 +78,13 @@ Users.hasMany(Tokens, {
   sourceKey: "userId",
   as: "userTokens",
 });
+Users.hasMany(Comments, {
+  foreignKey: "userId",
+  sourceKey: "userId",
+  as: "usersComments",
+});
+
+Users.hasOne(Profile);
+
 Users.sync();
 export default Users;
