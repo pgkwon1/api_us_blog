@@ -74,6 +74,10 @@ export const ProfileSkills = sequelize.define(
 );
 Profile.belongsToMany(Skills, {
   through: ProfileSkills,
+  foreignKey: "profileId",
 });
-
+Skills.belongsToMany(Profile, {
+  through: ProfileSkills,
+  foreignKey: "skillsId",
+});
 export default Profile;
