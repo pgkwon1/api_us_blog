@@ -10,9 +10,8 @@ import likesRouter from "./routes/likes";
 import commentsRouter from "./routes/comments";
 
 import csrf from "csurf";
-import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-
+import { accessTokenVerify } from "./util/jwt.util";
 const app = express();
 
 app.use(
@@ -36,45 +35,11 @@ app.use(bodyParser.json());
 app.use(csrf({ cookie: true }));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (req.method !== "GET") {
-      const token =
-        req.headers.authorization &&
-        req.headers.authorization.replace("Bearer ", "");
-      if (token && token !== "undefined") {
-        jwt.verify(
-          token,
-          process.env.ACCESS_TOKEN_SECRET_KEY,
-          function (err, decoded) {
-            if (err) {
-              throw new Error(err.message);
-            }
-          }
-        );
-      }
-    }
-
-    next();
-  } catch (err) {
-    if (err?.message === "jwt expired") {
-      res.send({
-        error: true,
-        expired: true,
-        message: "Token expired",
-      });
-    } else if (err?.message === "refresh token expired") {
-      res.send({
-        error: true,
-        refreshToken: true,
-        message: "refresh token expired",
-      });
-    } else {
-      res.send({
-        error: true,
-        message: err?.message,
-      });
-    }
+  if (req.method !== "GET") {
+    accessTokenVerify(req);
   }
+
+  next();
 });
 
 app.use("/getCsrf", (req: Request, res: Response) => {

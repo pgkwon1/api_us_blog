@@ -1,6 +1,9 @@
+import { Request } from "express";
 import ITokensControllerDomain from "../domain/controllers/Tokens";
 import TokensService from "../services/Tokens.service";
 import jwt from "jsonwebtoken";
+import { refreshTokenVerify } from "../util/jwt.util";
+import { isJWT } from "class-validator";
 
 class TokensController implements ITokensControllerDomain {
   public tokensService: TokensService;
@@ -10,31 +13,30 @@ class TokensController implements ITokensControllerDomain {
   }
 
   async reissueToken(accessToken: string): Promise<string> {
-    const tokenData = await this.tokensService.getRefreshToken(accessToken);
+    if (!isJWT(accessToken)) throw new Error("비정상적인 접근입니다.");
+
+    const tokenData = await this.tokensService.getTokens(accessToken);
     const { userId, refreshToken } = tokenData;
 
     // refresh 토큰 만료 여부 refresh 토큰도 만료됐으면 로그아웃 처리
-    jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET_KEY,
-      (err, decoded) => {
-        // refresh 토큰도 만료됐다면
-        if (err?.message === "jwt expired") {
-          throw new Error("refresh token expired");
-        }
-      }
-    );
+    refreshTokenVerify(refreshToken);
     // 새로운 토큰 발급 프로세스
     const newAccessToken = TokensController.generateAccessToken(userId);
     // 새로운 토큰 db에 insert
-    this.tokensService.storeToken(newAccessToken, refreshToken, userId);
+    await this.deleteToken(accessToken);
+    await this.tokensService.storeToken(newAccessToken, refreshToken, userId);
     return newAccessToken;
   }
 
   async getRefreshToken(accessToken: string): Promise<object> {
     const TokenService = new TokensService();
-    const refreshToken = TokenService.getRefreshToken(accessToken);
+    const refreshToken = TokenService.getTokens(accessToken);
     return refreshToken;
+  }
+
+  async deleteToken(oldAccessToken: string): Promise<boolean> {
+    await this.tokensService.deleteToken(oldAccessToken);
+    return true;
   }
 
   static generateAccessToken(userId: string): string {

@@ -50,7 +50,7 @@ router.post(
         newAccessToken,
       });
     } catch (err) {
-      next(err.message);
+      next(err);
     }
   }
 );

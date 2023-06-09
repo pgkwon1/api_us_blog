@@ -1,10 +1,11 @@
+/* eslint-disable class-methods-use-this */
 import ITokenServiceDomain from "../domain/services/Tokens";
 import Tokens from "../models/Tokens.model";
 
 class TokensService implements ITokenServiceDomain {
   constructor() {}
 
-  async getRefreshToken(accessToken: string): Promise<object> {
+  async getTokens(accessToken: string): Promise<object> {
     const refreshToken = await Tokens.findOne({
       where: {
         accessToken,
@@ -32,6 +33,18 @@ class TokensService implements ITokenServiceDomain {
       throw new Error("토큰 생성에 실패하였습니다.");
     }
 
+    return true;
+  }
+
+  async deleteToken(accessToken: string): Promise<boolean> {
+    const result = await Tokens.destroy({
+      where: {
+        accessToken,
+      },
+    });
+    if (result === undefined) {
+      throw new Error("토큰 삭제에 실패하였습니다.");
+    }
     return true;
   }
 }

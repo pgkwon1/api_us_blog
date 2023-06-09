@@ -5,6 +5,7 @@ import { isJWT } from "class-validator";
 import UserController from "../controllers/Users.controller";
 import UserMiddleWare from "../middleware/Users.middleware";
 import ProfileController from "../controllers/Profile.controller";
+import { accessTokenVerify } from "../util/jwt.util";
 
 const router = express.Router();
 
@@ -19,22 +20,7 @@ router.get(
         throw new Error("비정상적인 접근입니다.");
       }
 
-      const token =
-        req.headers.authorization &&
-        req.headers.authorization.replace("Bearer ", "");
-      if (isJWT(token)) {
-        jwt.verify(
-          token,
-          process.env.ACCESS_TOKEN_SECRET_KEY,
-          (err: { message: string }) => {
-            if (err) {
-              throw new Error(err.message);
-            }
-          }
-        );
-      } else {
-        throw new Error("비정상적인 접근입니다.");
-      }
+      accessTokenVerify(req);
       const { userId } = req.params;
       const Profile = new ProfileController();
       const profile = await Profile.getProfile(userId);
