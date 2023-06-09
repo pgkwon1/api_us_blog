@@ -2,7 +2,6 @@ import ITokensControllerDomain from "../domain/controllers/Tokens";
 import TokensService from "../services/Tokens.service";
 import jwt from "jsonwebtoken";
 import { refreshTokenVerify } from "../util/jwt.util";
-import { isJWT } from "class-validator";
 
 class TokensController implements ITokensControllerDomain {
   public tokensService: TokensService;
@@ -21,7 +20,7 @@ class TokensController implements ITokensControllerDomain {
     const newAccessToken = TokensController.generateAccessToken(userId);
     // 새로운 토큰 db에 insert
     await this.deleteToken(accessToken);
-    await this.tokensService.storeToken(newAccessToken, refreshToken, userId);
+    await this.storeToken(newAccessToken, refreshToken, userId);
     return newAccessToken;
   }
 
