@@ -1,4 +1,3 @@
-import { Request } from "express";
 import ITokensControllerDomain from "../domain/controllers/Tokens";
 import TokensService from "../services/Tokens.service";
 import jwt from "jsonwebtoken";
@@ -13,9 +12,7 @@ class TokensController implements ITokensControllerDomain {
   }
 
   async reissueToken(accessToken: string): Promise<string> {
-    if (!isJWT(accessToken)) throw new Error("비정상적인 접근입니다.");
-
-    const tokenData = await this.tokensService.getTokens(accessToken);
+    const tokenData = await this.getTokens(accessToken);
     const { userId, refreshToken } = tokenData;
 
     // refresh 토큰 만료 여부 refresh 토큰도 만료됐으면 로그아웃 처리
@@ -28,9 +25,8 @@ class TokensController implements ITokensControllerDomain {
     return newAccessToken;
   }
 
-  async getRefreshToken(accessToken: string): Promise<object> {
-    const TokenService = new TokensService();
-    const refreshToken = TokenService.getTokens(accessToken);
+  async getTokens(accessToken: string): Promise<object> {
+    const refreshToken = await this.tokensService.getTokens(accessToken);
     return refreshToken;
   }
 
