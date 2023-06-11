@@ -1,5 +1,5 @@
-import { IProfileControllerDomain } from "../../domain/controllers/Profile";
-import ProfileService from "../../services/Profile/Profile.service";
+import { IProfileControllerDomain } from "../domain/controllers/Profile";
+import ProfileService from "../services/Profile.service";
 
 class ProfileController implements IProfileControllerDomain {
   public profileService: ProfileService;
