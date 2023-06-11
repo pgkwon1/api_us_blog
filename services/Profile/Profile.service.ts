@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { Sequelize } from "sequelize";
-import { IProfileServiceDomain } from "../domain/services/Profile";
-import Profile from "../models/Profile/Profile.model";
-import Skills from "../models/Profile/Skills.model";
+import { IProfileServiceDomain } from "../../domain/services/Profile";
+import Profile from "../../models/Profile/Profile.model";
+import Skills from "../../models/Profile/Skills.model";
 
 class ProfileService implements IProfileServiceDomain {
   constructor() {}
@@ -20,7 +20,7 @@ class ProfileService implements IProfileServiceDomain {
           },
         },
       ],
-      order: [[Sequelize.literal("Skills.category"), "DESC"]],
+      order: [[Sequelize.literal("Skills.order"), "ASC"]],
     });
 
     if (result === null) {
