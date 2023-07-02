@@ -6,7 +6,7 @@ export function accessTokenVerify(req: Request): boolean {
   const token =
     req.headers.authorization &&
     req.headers.authorization.replace("Bearer ", "");
-
+  console.log("tokentoken", token);
   if (token && token !== "undefined") {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err: Error) => {
       if (err && err !== null) {
@@ -17,6 +17,8 @@ export function accessTokenVerify(req: Request): boolean {
         }
       }
     });
+  } else {
+    throw new Error("비정상적인 접근입니다.");
   }
   return true;
 }
