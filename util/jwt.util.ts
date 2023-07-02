@@ -18,9 +18,10 @@ export function accessTokenVerify(req: Request): boolean {
     });
   } else {
     const { method, url } = req;
-    method === "POST" && url === "/member/login"
-      ? ""
-      : throw new Error("비정상적인 접근입니다.");
+    if (method === "POST" && url === "/member/login") {
+      return true;
+    }
+    throw new Error("비정상적인 접근입니다.");
   }
   return true;
 }
