@@ -48,7 +48,7 @@ router.post(
         console.log(err);
         err.message = "회원가입에 실패하였습니다 관리자에게 문의해주세요";
       }
-      next(err.message);
+      next(err);
     }
   }
 );
@@ -64,7 +64,7 @@ router.post(
 
       res.json({ token });
     } catch (err) {
-      next(err.message);
+      next(err);
     }
   }
 );
