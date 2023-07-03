@@ -2,7 +2,10 @@ import { isJWT } from "class-validator";
 import { Request } from "express";
 import jwt from "jsonwebtoken";
 
+const excludeUrl = ["/member/login", "/retoken"];
+
 export function accessTokenVerify(req: Request): boolean {
+  if (excludeUrl.includes(req.url)) return true;
   const token =
     req.headers.authorization &&
     req.headers.authorization.replace("Bearer ", "");
@@ -17,10 +20,6 @@ export function accessTokenVerify(req: Request): boolean {
       }
     });
   } else {
-    const { method, url } = req;
-    if (method === "POST" && url === "/member/login") {
-      return true;
-    }
     throw new Error("비정상적인 접근입니다.");
   }
   return true;
