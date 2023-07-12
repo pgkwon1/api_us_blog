@@ -3,15 +3,11 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
 import { logger } from "./config/winston";
-import indexRouter from "./routes/index";
-import memberRouter from "./routes/member";
-import postsRouter from "./routes/posts";
-import likesRouter from "./routes/likes";
-import commentsRouter from "./routes/comments";
 
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
 import { accessTokenVerify } from "./util/jwt.util";
+import router from "./routes";
 const app = express();
 
 app.use(
@@ -33,6 +29,7 @@ if (process.env.NODE_ENV === "production") {
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(csrf({ cookie: true }));
+app.use(express.static("public"));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.method !== "GET") {
@@ -47,12 +44,7 @@ app.use("/getCsrf", (req: Request, res: Response) => {
     CSRF_TOKEN: req.csrfToken(),
   });
 });
-app.use("/", indexRouter);
-app.use("/member", memberRouter);
-app.use("/post", postsRouter);
-app.use("/like", likesRouter);
-app.use("/comment", commentsRouter);
-
+app.use("/", router);
 app.use(async (err, req, res, next) => {
   if (err.message === 403) res.send("비정상적인 접근입니다.");
   if (err instanceof ReferenceError === true) {
