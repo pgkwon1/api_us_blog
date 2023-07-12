@@ -7,7 +7,7 @@ import { logger } from "./config/winston";
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
 import { accessTokenVerify } from "./util/jwt.util";
-import router from "./routes";
+import router from "./routes/appRouter";
 const app = express();
 
 app.use(
