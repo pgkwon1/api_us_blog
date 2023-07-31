@@ -1,8 +1,8 @@
 import { isJWT } from "class-validator";
-import { Request } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-const excludeUrl = ["/member/login", "/retoken"];
+const excludeUrl = ["/member/login", "/member/register", "/retoken"];
 
 export function accessTokenVerify(req: Request): boolean {
   if (excludeUrl.includes(req.url)) return true;
@@ -43,3 +43,26 @@ export function refreshTokenVerify(refreshToken: string): boolean {
   }
   return true;
 }
+
+export const checkUserutPatchDelete = (req: Request) => {
+  const token =
+    req.headers.authorization &&
+    req.headers.authorization.replace("Bearer ", "");
+  jwt.verify(
+    token,
+    process.env.ACCESS_TOKEN_SECRET_KEY,
+    (err: Error, decode) => {
+      if (err && err !== null) {
+        const { message } = err;
+        if (message === "jwt expired") {
+          throw new Error("access token expired");
+        }
+      } else {
+        const isNotOwner = req.body.userId !== decode.data;
+        if (isNotOwner) {
+          throw new Error("비정상적인 접근입니다.");
+        }
+      }
+    }
+  );
+};
