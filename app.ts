@@ -6,7 +6,7 @@ import { logger } from "./config/winston";
 
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
-import { accessTokenVerify, checkUserutPatchDelete } from "./util/jwt.util";
+import { accessTokenVerify, checkUserPutPatchDelete } from "./util/jwt.util";
 import router from "./routes/appRouter";
 
 const app = express();
@@ -35,7 +35,7 @@ app.use(express.static("public"));
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.method !== "GET") {
     if (["PUT", "PATCH", "DELETE"].includes(req.method)) {
-      checkUserutPatchDelete(req);
+      checkUserPutPatchDelete(req);
     } else {
       accessTokenVerify(req);
     }

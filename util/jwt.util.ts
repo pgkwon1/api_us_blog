@@ -44,7 +44,7 @@ export function refreshTokenVerify(refreshToken: string): boolean {
   return true;
 }
 
-export const checkUserutPatchDelete = (req: Request) => {
+export const checkUserPutPatchDelete = (req: Request) => {
   const token =
     req.headers.authorization &&
     req.headers.authorization.replace("Bearer ", "");
