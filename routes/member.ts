@@ -1,26 +1,18 @@
 import express, { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import csrf from "csurf";
-import { isJWT } from "class-validator";
 import UserController from "../controllers/Users.controller";
 import UserMiddleWare from "../middleware/Users.middleware";
 import ProfileController from "../controllers/Profile.controller";
-import { accessTokenVerify } from "../util/jwt.util";
 
 const router = express.Router();
 
-const csrfProtection = csrf({ cookie: true });
-
 router.get(
   "/:userId",
-  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (req.params.userId === undefined) {
         throw new Error("비정상적인 접근입니다.");
       }
 
-      accessTokenVerify(req);
       const { userId } = req.params;
       const Profile = new ProfileController();
       const profile = await Profile.getProfile(userId);
@@ -34,7 +26,6 @@ router.get(
 );
 router.post(
   "/register",
-  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       // 입력값 검사
@@ -54,7 +45,6 @@ router.post(
 );
 router.post(
   "/login",
-  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await UserMiddleWare.validateLoginBody(req.body);
