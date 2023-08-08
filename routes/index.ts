@@ -41,7 +41,6 @@ router.get(
 );
 router.post(
   "/retoken",
-  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const Tokens = new TokensController();

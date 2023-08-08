@@ -13,7 +13,6 @@ const csrfProtection = csrf({ cookie: true });
 
 router.get(
   "/:userId",
-  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (req.params.userId === undefined) {
@@ -34,7 +33,6 @@ router.get(
 );
 router.post(
   "/register",
-  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       // 입력값 검사
@@ -54,7 +52,6 @@ router.post(
 );
 router.post(
   "/login",
-  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await UserMiddleWare.validateLoginBody(req.body);

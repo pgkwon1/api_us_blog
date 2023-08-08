@@ -53,7 +53,6 @@ router.get(
 
 router.post(
   "/write",
-  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await PostMiddleware.validateWriteBody(req.body);
