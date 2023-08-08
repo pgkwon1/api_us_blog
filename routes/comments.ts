@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import csrf from "csurf";
 import CommentsController from "../controllers/Comments.controller";
 
 const router = express.Router();
@@ -8,6 +9,8 @@ interface IWriteBody {
   userId: string;
   contents?: string;
 }
+const csrfProtection = csrf({ cookie: true });
+
 router.get(
   `/:postId`,
   async (req: Request, res: Response, next: NextFunction) => {
@@ -51,6 +54,7 @@ router.post(
 
 router.delete(
   "delete",
+  csrfProtection,
   async (
     req: Request<unknown, unknown, IWriteBody>,
     res: Response,

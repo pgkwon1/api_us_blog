@@ -67,6 +67,7 @@ router.post(
 );
 router.patch(
   "/edit",
+  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const Post = new PostController();
@@ -81,6 +82,7 @@ router.patch(
 
 router.delete(
   "/delete",
+  csrfProtection,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.body;
