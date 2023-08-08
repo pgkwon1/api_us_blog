@@ -1,15 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import csrf from "csurf";
-import { isJWT } from "class-validator";
 import UserController from "../controllers/Users.controller";
 import UserMiddleWare from "../middleware/Users.middleware";
 import ProfileController from "../controllers/Profile.controller";
-import { accessTokenVerify } from "../util/jwt.util";
 
 const router = express.Router();
-
-const csrfProtection = csrf({ cookie: true });
 
 router.get(
   "/:userId",
