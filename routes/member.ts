@@ -19,7 +19,6 @@ router.get(
         throw new Error("비정상적인 접근입니다.");
       }
 
-      accessTokenVerify(req);
       const { userId } = req.params;
       const Profile = new ProfileController();
       const profile = await Profile.getProfile(userId);
