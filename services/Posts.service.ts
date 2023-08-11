@@ -62,14 +62,31 @@ class PostsService implements IPostsServiceDomain {
     return post;
   }
 
-  async getUserPostList(author: string): Promise<Posts[]> {
-    const userPostList: Posts[] = await Posts.findAll({
+  async getUserPostList(author: string, page: number): Promise<Posts[]> {
+    let offset = 0;
+    if (page > 1) {
+      offset = 10 * page;
+    }
+    const postList = await Posts.findAll({
       where: {
         author,
       },
-      include: [{ model: Likes, as: "postsLikes" }],
+      limit: 10,
+      offset,
+      include: [
+        {
+          model: Tags,
+          through: {
+            attributes: ["postId", "tagId", "order"],
+          },
+        },
+        {
+          model: Likes,
+          as: "postsLikes",
+        },
+      ],
     });
-    return userPostList;
+    return postList;
   }
 
   async getPostListByCategory(

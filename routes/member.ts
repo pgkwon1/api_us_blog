@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import UserController from "../controllers/Users.controller";
 import UserMiddleWare from "../middleware/Users.middleware";
-import ProfileController from "../controllers/Profile.controller";
+import ProfileController from "../controllers/Profile/Profile.controller";
 
 const router = express.Router();
 
@@ -58,4 +58,28 @@ router.post(
     }
   }
 );
+
+router.get(
+  `/author/:author/:page`,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (req.params.author === undefined) {
+        throw new Error("비정상적인 접근입니다.");
+      }
+      const { author, page } = req.params;
+
+      const Post = new PostController();
+      const postList = await Post.getUserPostList(
+        author,
+        page as unknown as number
+      );
+      res.send({
+        postList,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 export default router;

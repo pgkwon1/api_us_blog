@@ -6,7 +6,7 @@ import RegisterDto from "../dto/member/RegisterDto";
 import UsersService from "../services/Users.service";
 import UtilService from "../services/Util.service";
 import TokensController from "./Tokens.controller";
-import ProfileController from "./Profile.controller";
+import ProfileController from "./Profile/Profile.controller";
 
 dotenv.config();
 

@@ -6,6 +6,7 @@ import IUserDto from "../dto/models/UsersDto";
 import Tokens from "./Tokens.model";
 import Comments from "./Comments.model";
 import Profile from "./Profile/Profile.model";
+import Project from "./Profile/Project.model";
 
 class Users extends Model<IUserDto> {
   public id: string;
@@ -82,6 +83,12 @@ Users.hasMany(Comments, {
   foreignKey: "userId",
   sourceKey: "userId",
   as: "usersComments",
+});
+
+Users.hasMany(Project, {
+  sourceKey: "id",
+  foreignKey: "userId",
+  as: "userProject",
 });
 
 Users.hasOne(Profile);

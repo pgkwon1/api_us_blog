@@ -51,6 +51,25 @@ router.get(
   }
 );
 
+router.get(
+  "/author/:author/:page",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.params.author) {
+        throw new Error("비정상적인 접근입니다.");
+      }
+      const { author, page } = req.params;
+
+      const Post = new PostController();
+      const postList = await Post.getUserPostList(author, page);
+      res.send({
+        postList,
+      });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 router.post(
   "/write",
   async (req: Request, res: Response, next: NextFunction) => {
