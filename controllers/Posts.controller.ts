@@ -54,9 +54,10 @@ class PostController implements IPostsControllerDomain {
     return postByCategory;
   }
 
-  async getUserPostList(author: string): Promise<object> {
+  async getUserPostList(author: string, page: number): Promise<IPostList[]> {
     let postList = (await this.postService.getUserPostList(
-      author
+      author,
+      page
     )) as unknown as IPostList[];
     postList = TagsUtil.sortPostListTags(postList);
     return postList;

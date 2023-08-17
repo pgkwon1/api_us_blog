@@ -1,13 +1,8 @@
 import { Association, DataTypes, Model } from "sequelize";
 import { sequelize } from "..";
 import Skills from "./Skills.model";
+import IProfileDto from "../../dto/models/Profile/ProfileDto";
 
-interface IProfileDto {
-  id: string;
-  userId: string;
-  jobGroup: string;
-  aboutMe: string;
-}
 class Profile extends Model<IProfileDto> {
   public id: string;
 
@@ -16,6 +11,8 @@ class Profile extends Model<IProfileDto> {
   public jobGroup: string;
 
   public aboutMe: string;
+
+  public picture: string;
 
   public static association: {
     profileSkills: Association<Profile, Skills>;
@@ -42,6 +39,9 @@ Profile.init(
 
     aboutMe: {
       type: DataTypes.TEXT,
+    },
+    picture: {
+      type: DataTypes.STRING,
     },
   },
   {

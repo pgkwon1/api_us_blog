@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://front-us-blog.vercel.app/*",
+    origin: process.env.FRONT_PRODUCT_URL,
     crendentials: true,
   })
 );

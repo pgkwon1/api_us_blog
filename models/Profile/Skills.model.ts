@@ -1,18 +1,16 @@
 import { Association, DataTypes, Model, UUIDV4 } from "sequelize";
 import { sequelize } from "..";
 import Profile from "./Profile.model";
+import ISkillsDto from "../../dto/models/Profile/SkillsDto";
 
-interface ISkillsDto {
-  id: string;
-  name: string;
-  category: string;
-}
 class Skills extends Model<ISkillsDto> {
   public id: string;
 
   public name: string;
 
   public category: string;
+
+  public order: number;
 
   public static associations: {
     profileSkills: Association<Skills, Profile>;
@@ -34,6 +32,9 @@ Skills.init(
     },
     category: {
       type: DataTypes.STRING,
+    },
+    order: {
+      type: DataTypes.NUMBER,
     },
   },
   {
