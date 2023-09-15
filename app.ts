@@ -6,6 +6,7 @@ import { logger } from "./config/winston";
 
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
+import multiparty from "multiparty";
 import { accessTokenVerify, checkUserPutPatchDelete } from "./util/jwt.util";
 import router from "./routes/appRouter";
 
@@ -35,7 +36,21 @@ app.use(express.static("public"));
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.method !== "GET") {
     if (["PUT", "PATCH", "DELETE"].includes(req.method)) {
-      checkUserPutPatchDelete(req);
+      const isFormData = req.headers["content-type"].includes(
+        "multipart/form-data"
+      );
+      if (isFormData) {
+        const form = new multiparty.Form();
+        form.parse(req, (err, fields) => {
+          try {
+            checkUserPutPatchDelete(req);
+          } catch (e) {
+            next(e);
+          }
+        });
+      } else {
+        checkUserPutPatchDelete(req);
+      }
     } else {
       accessTokenVerify(req);
     }
@@ -51,6 +66,7 @@ app.use("/getCsrf", (req: Request, res: Response) => {
 });
 app.use("/", router);
 app.use(async (err, req, res, next) => {
+  console.log("profile");
   if (err.message === 403) res.send("비정상적인 접근입니다.");
   if (err instanceof ReferenceError === true) {
     err = "오류가 발생하였습니다.";

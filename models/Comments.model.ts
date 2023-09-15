@@ -47,9 +47,8 @@ Comments.init(
     },
 
     contents: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
-      primaryKey: true,
     },
 
     createdAt: {
