@@ -5,7 +5,7 @@ import Comments from "../models/Comments.model";
 class CommentsService implements ICommentsServiceDomain {
   constructor() {}
 
-  async getCommentsList(postId: string): Promise<object> {
+  async getCommentsList(postId: string): Promise<Comments[]> {
     const commentList = await Comments.findAll({
       where: {
         postId,
@@ -16,11 +16,11 @@ class CommentsService implements ICommentsServiceDomain {
     return commentList;
   }
 
-  async getComment(postId: string, userId: string): Promise<object> {
+  async getComment(commentId: string, postId: string): Promise<Comments> {
       const result = await Comments.findOne({
         where: {
+          id: commentId,
           postId,
-          userId,
         }
       })
 
@@ -49,11 +49,27 @@ class CommentsService implements ICommentsServiceDomain {
   }
 
   async deleteComments(
-    postId: string,
-    userId: string,
-    commentId: string
+    commentInstance: Comments,
   ): Promise<boolean> {
-    throw new Error("Method not implemented.");
+    const result = await commentInstance.destroy();
+
+    if (result === null) {
+      throw new Error("댓글 삭제에 실패하였습니다.");
+    }
+    return true;
+    
+  }
+
+  async updateComments(commentInstance: Comments, contents: string): Promise<boolean> {
+    const result = await commentInstance.update({
+      contents,
+    })
+
+    if (result === null) {
+      throw new Error("댓글 수정에 실패하였습니다.");
+    }
+
+    return true;
   }
 }
 

@@ -52,17 +52,48 @@ router.post(
   }
 );
 
-router.delete(
-  "delete",
-  csrfProtection,
-  async (
-    req: Request<unknown, unknown, IWriteBody>,
-    res: Response,
-    next: NextFunction
-  ) => {
+router.patch(
+  "/update",
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const isWrongAccess = req.body.postId === null || req.body.commentsId;
+      if (isWrongAccess) {
+        throw new Error("비정상적인 접근입니다.");
+      }
+      const {
+        id: commentId,
+        postId,
+        editContents: contents,
+        userId,
+      } = req.body;
       const Comment = new CommentsController();
-      const result = await Comment.deleteComments(postId, userId);
+      const result = await Comment.updateComments({
+        commentId,
+        postId,
+        contents,
+        userId,
+      });
+      res.send(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.delete(
+  "/delete",
+  csrfProtection,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id: commentId, postId, userId } = req.body;
+      const isWrongAccess = !commentId || !postId;
+      if (isWrongAccess) {
+        throw new Error("비정상적인 접근입니다.");
+      }
+
+      const Comment = new CommentsController();
+      const result = await Comment.deleteComments(commentId, postId, userId);
+      res.send(result);
     } catch (err) {
       next(err);
     }
